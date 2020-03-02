@@ -1,0 +1,705 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Azurite",
+    "description": "A simple API for Azur Lane ship data",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/Build/{time}": {
+      "get": {
+        "tags": [
+          "Build"
+        ],
+        "summary": "Retrieves all ships with a given build time, optionally filtering by pool.",
+        "parameters": [
+          {
+            "name": "time",
+            "in": "path",
+            "description": "The build time when first queued (uses HH:mm:ss form in APIs).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Optionally filter results to ships from a given construction pool (Light, Heavy, Special).",
+            "schema": {
+              "$ref": "#/components/schemas/ConstructionType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Build/{type}": {
+      "get": {
+        "tags": [
+          "Build"
+        ],
+        "summary": "Retrieves all ships from a given build pool.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "description": "The build pool to retrieve ships for (Light, Heavy, Special)",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ConstructionType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ship"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ship"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ship"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Retrieves basic app information.",
+        "description": "In general, this endpoint shouldn't be needed by consuming applications. \r\nIt is provided as a convenience in case of future compatibility issues.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/index": {
+      "post": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Invokes an index rebuild operation.",
+        "description": "Given the massive load this can invoke (and misconfiguration risks), by default this request \r\ncan only be invoked from 'localhost' (i.e. the system the API is running on). This is controlled \r\nby the `Azurite.RebuildWhitelist` config option. This operation takes a *very* long time.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/Ships": {
+      "get": {
+        "tags": [
+          "Ships"
+        ],
+        "summary": "Gets a summary listing of all ships, optionally filtering by basic ship information.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Optional ship name to filter results by. Will only return exact matches.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The hull type to filter by. Supports prefix forms (i.e. DD, CL etc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "faction",
+            "in": "query",
+            "description": "Faction/Nation to filter by. Will only return exact matches, does not support prefixes.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rarity",
+            "in": "query",
+            "description": "Rarity to match by. Do not include spaces! (i.e. \"SuperRare\", not \"Super Rare\").",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Ships/{shipId}": {
+      "get": {
+        "tags": [
+          "Ships"
+        ],
+        "summary": "Gets a specific ship's details by its game ID.",
+        "parameters": [
+          {
+            "name": "shipId",
+            "in": "path",
+            "description": "The Ship ID (not name!) to get details for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ship"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ship"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ship"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Ships/class/{class}": {
+      "get": {
+        "tags": [
+          "Ships"
+        ],
+        "summary": "Gets a summary of all ships from a given class.",
+        "description": "This is not actually exposed in-game, but this makes it much easier to find matching ships for perks.",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "path",
+            "description": "The name of the ship class to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipSummary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConstructionType": {
+        "enum": [
+          "Light",
+          "Heavy",
+          "Special"
+        ],
+        "type": "string"
+      },
+      "ShipSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "rarity": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "factionName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShipName": {
+        "type": "object",
+        "properties": {
+          "en": {
+            "type": "string",
+            "nullable": true
+          },
+          "jp": {
+            "type": "string",
+            "nullable": true
+          },
+          "cn": {
+            "type": "string",
+            "nullable": true
+          },
+          "kr": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Stars": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "integer",
+            "description": "The default/normal star rating of the ship at construction/acquisition time, before any Limit Breaking.",
+            "format": "int32"
+          },
+          "max": {
+            "type": "integer",
+            "description": "The maximum star rating possible for the ship, after Limit Breaking etc.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Rarity": {
+        "enum": [
+          "None",
+          "Common",
+          "Rare",
+          "Elite",
+          "SuperRare",
+          "UltraRare",
+          "Priority",
+          "Decisive"
+        ],
+        "type": "string",
+        "description": "DO NOT Enum.Parse this! Thanks to differences in regions, there is some extra logic required here. \r\nUse M:Azurite.Helpers.ParseRarity(System.String) instead."
+      },
+      "Skin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "preview": {
+            "type": "string",
+            "nullable": true
+          },
+          "chibi": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Faction": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The full name of the faction/nation.",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "description": "The prefix used for ships from this nation.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ArmorType": {
+        "enum": [
+          "Light",
+          "Medium",
+          "Heavy"
+        ],
+        "type": "string"
+      },
+      "StatisticsSet": {
+        "type": "object",
+        "properties": {
+          "hp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firepower": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "antiAir": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "antiSub": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "torpedo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aviation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "luck": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reload": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "evasion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "oilCost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "speed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "accuracy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "oxygen": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ammunition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "armor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ArmorType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShipStatistics": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatisticsSet"
+              }
+            ],
+            "nullable": true
+          },
+          "level100": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatisticsSet"
+              }
+            ],
+            "nullable": true
+          },
+          "level120": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatisticsSet"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EquipmentSlot": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "efficiency": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Ship": {
+        "type": "object",
+        "properties": {
+          "shipId": {
+            "type": "string",
+            "description": "This is the game-internal ship ID, which is also listed out on the Wiki.",
+            "nullable": true
+          },
+          "shipName": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ShipName"
+              }
+            ],
+            "description": "This is the normal ship name, without prefixes or any extras.",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "This is the hull type of the ship.",
+            "nullable": true
+          },
+          "class": {
+            "type": "string",
+            "description": "The class of the ship (if applicable). This will be the same as the Azurite.Ship.ShipName name when its the lead ship of the class.",
+            "nullable": true
+          },
+          "stars": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Stars"
+              }
+            ],
+            "description": "The star rating of the ship.",
+            "nullable": true
+          },
+          "rarity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Rarity"
+              }
+            ],
+            "description": "The rarity rating of the ship."
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL used to source ship information. This will not always be set.",
+            "nullable": true
+          },
+          "buildTime": {
+            "type": "string",
+            "description": "The time required to build this ship from its pool.",
+            "nullable": true
+          },
+          "buildType": {
+            "type": "string",
+            "description": "The \"special\" build type for ships not available from construction pools.",
+            "nullable": true
+          },
+          "skins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Skin"
+            },
+            "description": "Not currently implemented!",
+            "nullable": true
+          },
+          "faction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Faction"
+              }
+            ],
+            "description": "The faction/nation this ship belongs to.",
+            "nullable": true
+          },
+          "statistics": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ShipStatistics"
+              }
+            ],
+            "nullable": true
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EquipmentSlot"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
