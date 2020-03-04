@@ -13,13 +13,13 @@ Hosting your own Azurite API is very simple. The process depends on how you want
 Deploying Azurite via Docker is probably the easiest method available, and certainly the easiest to get started with. First, pull the image to your machine with the following command:
 
 ```bash
-docker pull docker.pkg.github.com/azurite-dev/azurite/server:stable
+docker pull quay.io/azurite/azurite:stable
 ```
 
 Next, run the container, binding your chosen port to port 80 in the container:
 
 ```bash
-docker run -p 8080:80 docker.pkg.github.com/azurite-dev/azurite/server:stable
+docker run -p 8080:80 quay.io/azurite/azurite:stable
 ```
 
 You can then access your API at `localhost:8080`. You can test this by calling/browing `http://localhost:8080/version/` to get the raw Azurite version back.
@@ -37,7 +37,7 @@ docker exec <CONTAINER_ID> curl -d -XPOST localhost/api/v1/index
 2. **Pre-build an index and mount it**: If you already have a `ships.db` built using a previous instance, or using the CLI, you can include that file in the container and Azurite will load it:
 
 ```bash
-docker run -p 8080:80 -v /path/to/prebuilt/ships.db:/app/ships.db docker.pkg.github.com/azurite-dev/azurite/server:stable
+docker run -p 8080:80 -v /path/to/prebuilt/ships.db:/app/ships.db quay.io/azurite/azurite:stable
 ```
 
 > You can use a `ships.db` file from the Azurite CLI to power the Azurite API! They're the same format!
